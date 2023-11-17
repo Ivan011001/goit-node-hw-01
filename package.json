@@ -12,8 +12,10 @@
   "author": "Ivan <ivanivan@mail.com>",
   "license": "ISC",
   "devDependencies": {
-    "colour": "^0.7.1",
     "commander": "^11.1.0",
     "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "uuid": "^9.0.1"
   }
 }

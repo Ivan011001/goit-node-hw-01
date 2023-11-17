@@ -1,7 +1,9 @@
-const colour = require("colour");
+const uuid = require("uuid");
 const fs = require("fs/promises");
 const path = require("path");
-const contactsPath = path.join(process.cwd(), "./db/contacts.json");
+
+const currentDirectory = process.cwd();
+const contactsPath = path.join(currentDirectory, "/db/contacts.json");
 
 async function readFile() {
   try {
@@ -22,7 +24,6 @@ async function writeFile(contacts) {
 
 async function listContacts() {
   const contacts = await readFile();
-  console.log("Here are your contacts: ".green);
   console.table(contacts);
 }
 
@@ -30,9 +31,12 @@ async function getContactById(contactId) {
   const contacts = await readFile();
   const contact = contacts.find(({ id }) => id === contactId);
 
-  if (contact) return console.log("Here is your contact: ".green, contact);
+  if (contact) {
+    console.log(contact);
+    return;
+  }
 
-  console.log(`There is no contact with id: ${contactId}`.red);
+  console.log(null);
 }
 
 async function removeContact(contactId) {
@@ -40,14 +44,14 @@ async function removeContact(contactId) {
   const index = contacts.findIndex(({ id }) => id === contactId);
 
   if (index === -1) {
-    console.log(`There is no contact with id: ${contactId}`.red);
+    console.log(null);
     return;
   }
 
   const newContacts = contacts.filter(({ id }) => id !== contactId);
   await writeFile(newContacts);
 
-  console.log("Contact has been removed: ".green, contacts[index]);
+  console.log(contacts[index]);
 }
 
 async function addContact(
@@ -58,7 +62,7 @@ async function addContact(
   const contacts = await readFile(contactsPath);
 
   const newContact = {
-    id: new Date().toISOString(),
+    id: uuid.v4(),
     name,
     email,
     phone,
@@ -67,7 +71,7 @@ async function addContact(
   const newContacts = [...contacts, newContact];
   await writeFile(newContacts);
 
-  console.log("Contact has been added: ".green, newContact);
+  console.log(newContact);
 }
 
 module.exports = {
